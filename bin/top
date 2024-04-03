@@ -10,18 +10,19 @@ N = (ARGV.first || 10).to_i
 SHELL = File.basename(ARGV.last || ENV["SHELL"] || "bash")
 
 HISTORY =
-  if SHELL == "fish"
+  case SHELL
+  when "fish"
     File
       .read("#{Dir.home}/.local/share/fish/fish_history")
       .lines
       .grep(/^- cmd: /)
       .map { |line| line.split("- cmd: ", 2).last.strip }
-  elsif SHELL == "bash"
+  when "bash"
     File.read("#{Dir.home}/.bash_history").lines.map(&:strip)
-  elsif SHELL == "zsh"
+  when "zsh"
     File.read("#{Dir.home}/.zsh_history").lines.map(&:strip)
   else
-    raise NotImplementedError.new(SHELL)
+    raise NotImplementedError, SHELL
   end
 
 puts(
@@ -37,7 +38,7 @@ puts(
       "#{index + 1}\t" \
         "#{command_count}\t" \
         "#{(command_count * 100 / HISTORY.size.to_f).round(3)}%\t" \
-          "#{command}"
+        "#{command}"
     end
     .first(N)
 )
