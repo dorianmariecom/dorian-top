@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dorian-top (0.1.4)
+    dorian-top (0.2.0)
 
 GEM
   remote: https://rubygems.org/
