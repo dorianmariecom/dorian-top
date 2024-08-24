@@ -3,16 +3,25 @@
 
 require "dorian/arguments"
 
-parsed = Dorian::Arguments.parse(
-  limit: { type: :integer, aliases: [:l, :n], default: 10 },
-  shell: {
-    type: :string,
-    alias: :s,
-    default: File.basename(ENV["SHELL"] || "bash")
-  },
-  version: { alias: :v },
-  help: { alias: :h }
-)
+parsed =
+  Dorian::Arguments.parse(
+    limit: {
+      type: :integer,
+      aliases: %i[l n],
+      default: 10
+    },
+    shell: {
+      type: :string,
+      alias: :s,
+      default: File.basename(ENV["SHELL"] || "bash")
+    },
+    version: {
+      alias: :v
+    },
+    help: {
+      alias: :h
+    }
+  )
 
 abort parsed.help if parsed.options.help
 
