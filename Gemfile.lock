@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dorian-top (0.2.3)
+    dorian-top (1.0.0)
       dorian-arguments
 
 GEM
