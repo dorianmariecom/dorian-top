@@ -1,16 +1,27 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-if ARGV.size > 2 || ARGV.first == "-h" || ARGV.first == "--help"
-  puts "USAGE: top [N] [SHELL]"
-  exit
+require "dorian/arguments"
+
+parsed = Dorian::Arguments.parse(
+  limit: { type: :integer, aliases: [:l, :n], default: 10 },
+  shell: {
+    type: :string,
+    alias: :s,
+    default: File.basename(ENV["SHELL"] || "bash")
+  },
+  version: { alias: :v },
+  help: { alias: :h }
+)
+
+abort parsed.help if parsed.options.help
+
+if parsed.options.version
+  abort File.read(File.expand_path("../../VERSION", __FILE__))
 end
 
-N = (ARGV.first || 10).to_i
-SHELL = File.basename(ARGV.last || ENV["SHELL"] || "bash")
-
 HISTORY =
-  case SHELL
+  case parsed.options.shell.to_s.downcase
   when "fish"
     File
       .read("#{Dir.home}/.local/share/fish/fish_history")
@@ -22,7 +33,7 @@ HISTORY =
   when "zsh"
     File.read("#{Dir.home}/.zsh_history").lines.map(&:strip)
   else
-    raise NotImplementedError, SHELL
+    raise NotImplementedError, parsed.options.shell.to_s.downcase
   end
 
 puts(
@@ -40,5 +51,5 @@ puts(
         "#{(command_count * 100 / HISTORY.size.to_f).round(3)}%\t" \
         "#{command}"
     end
-    .first(N)
+    .first(parsed.options.limit)
 )
