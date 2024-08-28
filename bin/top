@@ -47,8 +47,7 @@ HISTORY =
 
 puts(
   HISTORY
-    .map(&:split)
-    .map(&:first)
+    .map { |line| line.split.first }
     .tally
     .to_a
     .sort_by(&:last)
