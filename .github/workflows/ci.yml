@@ -18,6 +18,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+      - run: wget https://gist.githubusercontent.com/dorianmariecom/3023fdea974bdb5e95c26f4dc75e305f/raw/a8f5de64f73efa0878af1837c6eb336b99335582/.bash_history
       - run: bin/test
   rubocop:
     name: Rubocop
