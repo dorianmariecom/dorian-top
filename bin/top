@@ -29,18 +29,21 @@ if parsed.options.version
   abort File.read(File.expand_path("../VERSION", __dir__))
 end
 
+def read(path)
+  File.exist?(path) ? File.read(path) : ""
+end
+
 HISTORY =
   case parsed.options.shell.to_s.downcase
   when "fish"
-    File
-      .read("#{Dir.home}/.local/share/fish/fish_history")
+    read("#{Dir.home}/.local/share/fish/fish_history")
       .lines
       .grep(/^- cmd: /)
       .map { |line| line.split("- cmd: ", 2).last.strip }
   when "bash"
-    File.read("#{Dir.home}/.bash_history").lines.map(&:strip)
+    read("#{Dir.home}/.bash_history").lines.map(&:strip)
   when "zsh"
-    File.read("#{Dir.home}/.zsh_history").lines.map(&:strip)
+    read("#{Dir.home}/.zsh_history").lines.map(&:strip)
   else
     raise NotImplementedError, parsed.options.shell.to_s.downcase
   end
